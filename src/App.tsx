@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { HomeScene } from "@scenes/home";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <HomeScene />
+    </div>
+  );
 }
 
 export default App;
