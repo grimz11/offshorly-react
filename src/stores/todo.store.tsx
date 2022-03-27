@@ -21,7 +21,8 @@ export const TodoData = React.createContext<TodoData>(undefined!);
 export function todoStore() {
   const { data: todos } = useQuery<Array<ITodo>, Error>(
     ["todos"],
-    todoService.getTodos
+    todoService.getTodos,
+    { staleTime: 2000 }
   );
 
   const updateTodo = useMutation<void, Error, number>(
