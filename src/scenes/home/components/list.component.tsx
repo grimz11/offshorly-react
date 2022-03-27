@@ -3,48 +3,87 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Checkbox from "@mui/material/Checkbox";
-import Avatar from "@mui/material/Avatar";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export const ListToDo = () => {
+import { useStore } from "@stores/initializer.store";
+import { Box } from "@mui/system";
+import Tooltip from "@mui/material/Tooltip";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import IconButton from "@mui/material/IconButton";
+import { Typography } from "@mui/material";
+
+export const ListToDo: React.FC<any> = () => {
   const [checked, setChecked] = React.useState([1]);
+  const { todos, updateTodo, deleteTodo } = useStore();
 
   const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
     setChecked(newChecked);
+    updateTodo.mutateAsync(value);
   };
 
-  return (
+  return todos && todos.length > 0 ? (
     <List sx={{ width: "100%", bgcolor: "background.paper", borderRadius: 2 }}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-secondary-label-${value}`;
+      {todos?.map((item) => {
+        const labelId = `checkbox-list-secondary-label-${item}`;
+        const labelId2 = `delete-list-secondary-label-${item}`;
+
         return (
           <ListItem
-            key={value}
+            key={item.id}
             secondaryAction={
-              <Checkbox
-                edge="end"
-                onChange={handleToggle(value)}
-                checked={checked.indexOf(value) !== -1}
-                inputProps={{ "aria-labelledby": labelId }}
-              />
+              <Tooltip title="Delete">
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => deleteTodo.mutateAsync(item.id)}
+                >
+                  <DeleteIcon
+                    id={labelId2}
+                    color="error"
+                    sx={{ cursor: "pointer" }}
+                  />
+                </IconButton>
+              </Tooltip>
             }
+            disablePadding
           >
-            <ListItemButton>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemButton
+              role={undefined}
+              onClick={handleToggle(item.id)}
+              dense
+            >
+              <ListItemIcon>
+                <Tooltip title="Check if done">
+                  <Checkbox
+                    edge="end"
+                    checked={item.state}
+                    tabIndex={-1}
+                    inputProps={{ "aria-labelledby": labelId }}
+                  />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={item.text}></ListItemText>
             </ListItemButton>
           </ListItem>
         );
       })}
     </List>
+  ) : (
+    <Box
+      sx={{
+        width: "100%",
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        height: "100%",
+        alignItems: "center",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="h4">No content</Typography>
+    </Box>
   );
 };

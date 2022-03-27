@@ -18,7 +18,9 @@
     "baseUrl": "./",
     "paths": {
       "@core/themes": ["src/@core/themes/index"],
-      "@scenes/*": ["src/scenes/*"]
+      "@scenes/*": ["src/scenes/*"],
+      "@services/*": ["src/services/todo/*"],
+      "@stores/*": ["src/stores/*"]
     }
   },
   "include": ["src"],
