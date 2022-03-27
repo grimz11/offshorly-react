@@ -3,7 +3,6 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { ThemeUniverse } from "@core/themes";
 
 import { QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { AppDataProvider, queryClient } from "@stores/initializer.store";
 
 function App() {
