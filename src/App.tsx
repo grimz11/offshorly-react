@@ -14,7 +14,6 @@ function App() {
           <HomeScene />
         </ThemeProvider>
       </AppDataProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
