@@ -20,7 +20,8 @@
       "@core/themes": ["src/@core/themes/index"],
       "@scenes/*": ["src/scenes/*"],
       "@services/*": ["src/services/todo/*"],
-      "@stores/*": ["src/stores/*"]
+      "@stores/*": ["src/stores/*"],
+      "@components/*": ["src/components/*"]
     }
   },
   "include": ["src"],

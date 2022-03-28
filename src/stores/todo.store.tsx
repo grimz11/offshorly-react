@@ -2,6 +2,7 @@ import { useMutation, UseMutationResult, useQuery } from "react-query";
 import { todoService } from "@services/todo.service";
 import * as React from "react";
 import { queryClient } from "./initializer.store";
+import { ITodoUpdateRequest } from "@services/dto/update-request.dto";
 
 export interface ITodo {
   id: number;
@@ -10,23 +11,32 @@ export interface ITodo {
 }
 
 type TodoData = {
-  todos?: Array<ITodo>;
+  isLoading: boolean;
+  todos: Array<ITodo>;
   addTodo: UseMutationResult<void, Error, string>;
-  updateTodo: UseMutationResult<void, unknown, number>;
+  updateTodoState: UseMutationResult<void, unknown, number>;
   deleteTodo: UseMutationResult<void, unknown, number>;
+  updateTodoText: UseMutationResult<void, unknown, ITodoUpdateRequest>;
 };
 
 export const TodoData = React.createContext<TodoData>(undefined!);
 
 export function todoStore() {
-  const { data: todos } = useQuery<Array<ITodo>, Error>(
+  const { data: todos, isLoading } = useQuery<Array<ITodo>, Error>(
     ["todos"],
     todoService.getTodos,
     { staleTime: 2000 }
   );
 
-  const updateTodo = useMutation<void, Error, number>(
-    (id: number) => todoService.updateTodo(id!),
+  const updateTodoState = useMutation<void, Error, number>(
+    (id: number) => todoService.updateTodoState(id!),
+    {
+      onSettled: () => queryClient.invalidateQueries("todos"),
+    }
+  );
+
+  const updateTodoText = useMutation<void, Error, ITodoUpdateRequest>(
+    (payload: ITodoUpdateRequest) => todoService.updateTodoText(payload),
     {
       onSettled: () => queryClient.invalidateQueries("todos"),
     }
@@ -46,5 +56,12 @@ export function todoStore() {
     }
   );
 
-  return { todos, updateTodo, addTodo, deleteTodo };
+  return {
+    todos,
+    updateTodoState,
+    addTodo,
+    deleteTodo,
+    updateTodoText,
+    isLoading,
+  };
 }
