@@ -12,7 +12,7 @@ export interface ITodo {
 
 type TodoData = {
   isLoading: boolean;
-  todos: Array<ITodo>;
+  todos?: Array<ITodo>;
   addTodo: UseMutationResult<void, Error, string>;
   updateTodoState: UseMutationResult<void, unknown, number>;
   deleteTodo: UseMutationResult<void, unknown, number>;
